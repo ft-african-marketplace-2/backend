@@ -37,4 +37,14 @@ router.delete("/:item_id", (req, res, next) => {
     .catch(next);
 });
 
+//search tests
+// router.get("/search", (req, res, next) => {
+//   const { term } = req.query;
+//   Items.searchItemByName(term)
+//     .then((something) => {
+//       res.status(200).json(something);
+//     })
+//     .catch(next);
+// });
+
 module.exports = router;

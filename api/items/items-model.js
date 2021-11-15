@@ -38,6 +38,15 @@ async function removeItem(id) {
   return deletedItem;
 }
 
+// select description
+// from items
+// where to_tsvector(description) @@ to_tsquery('marketplace');
+// select * from items where name like '%Tribal%';
+
+function searchItemByName(term) {
+  return db("items").where("name", "like", `%${term}%`);
+}
+
 // function searchItemByName(searchterm) {
 //   // select name, to_tsvector('pg_catalog.english', name) as name_vector
 //   // from items
@@ -60,4 +69,5 @@ module.exports = {
   insertItem,
   removeItem,
   updateItem,
+  searchItemByName,
 };
