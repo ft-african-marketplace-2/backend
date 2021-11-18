@@ -39,8 +39,8 @@ router.delete("/:item_id", (req, res, next) => {
 
 //search tests
 // router.get("/search", (req, res, next) => {
-//   const { term } = req.query;
-//   Items.searchItemByName(term)
+//   let term = req.query.term;
+//   Items.searchItemByName({ term: term })
 //     .then((something) => {
 //       res.status(200).json(something);
 //     })
