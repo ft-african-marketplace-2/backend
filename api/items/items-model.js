@@ -1,4 +1,3 @@
-const { default: knex } = require("knex");
 const db = require("../data/db-config");
 
 function getAllItems() {
@@ -23,13 +22,21 @@ async function insertItem(item) {
     "description",
     "price",
     "img",
+    "user_id",
   ]);
   return newItemObject;
 }
 async function updateItem(id, changes) {
   const [updatedItemObject] = await db("items")
     .where("item_id", id)
-    .update(changes, ["item_id", "name", "description", "price", "img"]);
+    .update(changes, [
+      "item_id",
+      "name",
+      "description",
+      "price",
+      "img",
+      "user_id",
+    ]);
   return updatedItemObject;
 }
 
@@ -40,7 +47,22 @@ async function removeItem(id) {
 }
 
 function searchItemByName(term) {
-  return knex("items").where("name", "like", `%${term}%`);
+  return db("items").where("name", "like", `%${term}%`);
+}
+
+async function getStuffByText(words, strict) {
+  const alphaNumeric = words.replace(/[^0-9a-z]/gi, " ");
+  const wordsArray = alphaNumeric.trim().split(/\s+/);
+  const search = wordsArray.join(` ${strict ? "&" : "|"} `);
+  const result = await db.raw(
+    `
+    SELECT * FROM items
+    WHERE to_tsvector(name) @@ to_tsquery('??')
+    ORDER BY name DESC;
+  `,
+    [search]
+  );
+  return result.rows;
 }
 
 module.exports = {
@@ -51,4 +73,5 @@ module.exports = {
   removeItem,
   updateItem,
   searchItemByName,
+  getStuffByText,
 };

@@ -1,6 +1,15 @@
 const router = require("express").Router();
 const Items = require("../items/items-model");
 
+//search tests
+router.get("/search/:term", (req, res, next) => {
+  let term = req.params.term;
+  Items.searchItemByName(term)
+    .then((something) => {
+      res.status(200).json(something);
+    })
+    .catch(next);
+});
 router.get("/", (req, res, next) => {
   Items.getAllItems()
     .then((items) => {
@@ -36,15 +45,5 @@ router.delete("/:item_id", (req, res, next) => {
     })
     .catch(next);
 });
-
-//search tests
-// router.get("/search", (req, res, next) => {
-//   let term = req.query.term;
-//   Items.searchItemByName({ term: term })
-//     .then((something) => {
-//       res.status(200).json(something);
-//     })
-//     .catch(next);
-// });
 
 module.exports = router;
